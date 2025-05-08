@@ -6,6 +6,7 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 export class CategoriesService {
   create(createCategoryDto: CreateCategoryDto) {
     return 'This action adds a new category';
+    ///add setter and getter to the class
   }
 
   findAll() {
