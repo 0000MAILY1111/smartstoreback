@@ -12,7 +12,7 @@ export class CategoriesService {
     @InjectRepository(Category)  private readonly categoryRepository : Repository<Category>
   ) {}
   create(createCategoryDto: CreateCategoryDto) {
-    return 'This action adds a new category';
+    return this.categoryRepository.save(createCategoryDto); //save the category to the database
     ///add setter and getter to the class
   }
 
