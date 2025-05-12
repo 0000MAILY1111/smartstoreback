@@ -25,16 +25,18 @@ export class CategoriesService {
     if (!category) {
       throw new NotFoundException('la categoria no existe')
     }
-    return category; //find a category by id in the database
+    return category; 
   }
 
   async update(id: number, updateCategoryDto: UpdateCategoryDto) {
     const category = await this.findOne(id);
     category.name = updateCategoryDto.name;
-    return `This action updates a #${id} category`;
+    return await this.categoryRepository.save(category); //update a category by id in the database
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async remove(id: number) {
+    const category = await this.findOne(id);
+    await this.categoryRepository.delete(category);
+    return "Categoria Eliminada"//delete a category by id in the database
   }
 }
