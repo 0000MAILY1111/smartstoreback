@@ -28,7 +28,9 @@ export class CategoriesService {
     return category; //find a category by id in the database
   }
 
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
+  async update(id: number, updateCategoryDto: UpdateCategoryDto) {
+    const category = await this.findOne(id);
+    category.name = updateCategoryDto.name;
     return `This action updates a #${id} category`;
   }
 
