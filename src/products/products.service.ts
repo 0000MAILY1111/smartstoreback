@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import { Category } from 'src/categories/entities/category.entity';
 
 @Injectable()
@@ -16,8 +16,14 @@ export class ProductsService {
   async create(createProductDto: CreateProductDto) {
     const category = await this.categoryRepository.findOneBy ({id: createProductDto.categoryId})
      if (!category) {
-      throw new Error('Category not found');
+    let errors: string[] = []  
+      errors.push('La categoría no existe')
+      throw new NotFoundException (errors)
      }
+     return this.productRepository.save ({
+      ...createProductDto,
+      category: category
+     })
   }
 
   findAll() {

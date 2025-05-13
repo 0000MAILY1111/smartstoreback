@@ -10,6 +10,6 @@ export class Category {
     name: string  
 
     @OneToMany (() => Product, (product) => product.category, {cascade: true})
-    products: Product
+    products: Product[]
 
 }
