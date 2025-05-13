@@ -1,5 +1,5 @@
 import { Category } from 'src/categories/entities/category.entity';
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Product {
@@ -18,7 +18,8 @@ export class Product {
     @Column({type: 'int'})
     inventory: number;
 
-    @ManyToMany ( ()=> Category )
+    ///relacion de tablas muchos a uno
+    @ManyToOne ( ()=> Category )
     category : Category
 
 }
