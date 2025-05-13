@@ -27,7 +27,11 @@ export class ProductsService {
   }
 
   findAll() {
-    return `This action returns all products`;
+    return this.productRepository.find({
+      relations: {
+        category: true
+      }
+    });
   }
 
   findOne(id: number) {
