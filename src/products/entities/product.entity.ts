@@ -13,7 +13,7 @@ export class Product {
     image: string;
 
     @Column({type: 'decimal'})
-    private: number;
+    price: number;
 
     @Column({type: 'int'})
     inventory: number;
