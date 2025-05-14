@@ -6,6 +6,7 @@ import { Product } from './entities/product.entity';
 import { Not, Repository } from 'typeorm';
 import { Category } from 'src/categories/entities/category.entity';
 
+
 @Injectable()
 export class ProductsService {
   constructor(
@@ -26,12 +27,16 @@ export class ProductsService {
      })
   }
 
-  findAll() {
-    return this.productRepository.find({
+  async findAll () {
+    const [data, total] = await this.productRepository.findAndCount ({
       relations: {
-        category: true
-      }
-    });
+        category: true 
+      },
+      order: {
+        id: 'DESC'
+      },
+      
+    })
   }
 
   findOne(id: number) {

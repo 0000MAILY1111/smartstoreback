@@ -18,7 +18,7 @@ export class Product {
     @Column({type: 'int'})
     inventory: number;
 
-    ///relacion de tablas muchos a uno
+    ///relacion de tablas muchos a uno   en l findall service optimizado
     @ManyToOne ( ()=> Category )
     category : Category
 
