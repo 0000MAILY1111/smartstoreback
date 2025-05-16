@@ -29,8 +29,6 @@ export class CategoriesController {
     @Param('id', IdValidationPipe) id: string,
      @Body() updateCategoryDto: UpdateCategoryDto) {
     return this.categoriesService.update(+id, updateCategoryDto);
-    
-
   }
 
   @Delete(':id')
