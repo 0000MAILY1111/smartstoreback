@@ -9,4 +9,8 @@ export class GetProductsQueryDto {
     @IsNumberString({}, {message: ' la cantidad debe ser un número'})
      take: number; 
 
+    @IsOptional()
+    @IsNumberString({}, {message: ' la cantidad debe ser un número'})
+     skip: number; 
+
 }   ///mas adelante se puede agregar el id del producto para filtrar por id
