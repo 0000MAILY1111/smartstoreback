@@ -37,6 +37,7 @@ export class ProductsService {
       },
       take,   //esto es para paginacion , dec o inc si es necesario  //limit en sql
       skip: 1
+      
     }
     if (categoryId) {
       options.where = {
