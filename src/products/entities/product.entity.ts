@@ -18,7 +18,7 @@ export class Product {
     @Column({type: 'int'})
     inventory: number;
 
-    ///relacion de tablas muchos a uno   en l findall service optimizado
+    ///relacion de tablas muchos a uno   en l findall service optimizado, no es necesario hacer JOIN , solo con el cascade
     @ManyToOne ( ()=> Category )
     category : Category
 

@@ -6,6 +6,8 @@ import { Product } from './entities/product.entity';
 import { Category } from 'src/categories/entities/category.entity';
 
 @Module({
+
+  ///para las modificaiones 
   imports: [TypeOrmModule.forFeature([Product, Category])],
   controllers: [ProductsController],
   providers: [ProductsService],
