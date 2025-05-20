@@ -27,7 +27,7 @@ export class ProductsService {
     })
   }
 
-  async findAll (categoryId: number, take: number) {
+  async findAll (categoryId: number, take: number, skip : number) {
     const options : FindManyOptions <Product> = {
       relations : {
         category: true
@@ -36,8 +36,8 @@ export class ProductsService {
         id: 'DESC'
       },
       take,   //esto es para paginacion , dec o inc si es necesario  //limit en sql
-      skip: 1
-      
+      skip: 3
+
     }
     if (categoryId) {
       options.where = {

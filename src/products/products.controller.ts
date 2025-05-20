@@ -22,7 +22,7 @@ export class ProductsController {
     console.log(category);
     console.log(take);
     console.log(query);
-    return this.productsService.findAll(category, take);
+    return this.productsService.findAll(category, take, skip);
   }
 
   @Get(':id')
