@@ -22,4 +22,6 @@ export class Product {
     @ManyToOne ( ()=> Category )
     category : Category
 
+    @Column ({type: 'int'})
+    categoryId: number;  ///esto es para la relacion de tablas, no es necesario en el findall service optimizado, no es necesario hacer JOIN , solo con el cascade
 }
