@@ -6,7 +6,6 @@ import { Product } from './entities/product.entity';
 import { FindManyOptions, Not, Repository } from 'typeorm';
 import { Category } from 'src/categories/entities/category.entity';
 
-
 @Injectable()
 export class ProductsService {
   constructor(
@@ -81,7 +80,6 @@ export class ProductsService {
         throw new NotFoundException(errors)
       }
       product.category = category
-
     }
     return await this.productRepository.save(product)
   }
