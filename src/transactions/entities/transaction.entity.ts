@@ -10,7 +10,7 @@ export class Transaction {
     @Column({type: 'timestamp',default: () => 'CURRENT_TIMESTAMP((6)'})
     transactionDate: Date;
     @OneToMany ( () => TransactionContents, (transaction) => transaction.transaction,  {cascade: true})
-    conts : TransactionContents[]
+    contents : TransactionContents[]
 }
 
 @Entity()
@@ -24,7 +24,7 @@ export class TransactionContents{
     @ManyToOne(() => Product, (product) => product.id , {eager: true})
     product: Product;
     //ralcion de entidades 
-    @ManyToOne(() => Transaction, (transaction) => transaction.conts)
+    @ManyToOne(() => Transaction, (transaction) => transaction.contents)
     transaction: Transaction;
     
 }
