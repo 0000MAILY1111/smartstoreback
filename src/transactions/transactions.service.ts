@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -23,12 +23,15 @@ export class TransactionsService {
 
       for (const contents of createTransactionDto.contents) {
         const product = await transactionEntityManager.findOneBy( Product,{ id: contents.productId });
-
+        const errorss = [] as string[];
+        
         if (!product) {
-          throw new BadRequestException(`El producto ${contents.productId} no existe`);
+          errorss.push(`El producto con el ID: ${contents.productId} no existe`);
+          throw new NotFoundException (errorss)
         }
         if (contents.quantity > product.inventory) {
-          throw new BadRequestException(`El artículo ${product.name} excede la cantidad disponible`);
+          errorss.push(`El producto ${product.name} excede la cantidad de inventario`);
+          throw new BadRequestException (errorss)
         }
         product.inventory -= contents.quantity;
        // await transactionEntityManager.save(product);
