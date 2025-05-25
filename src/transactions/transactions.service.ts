@@ -51,16 +51,14 @@ export class TransactionsService {
 
   ///contents , es donde se relaciona los datos es como hacer el Join en SQL
   ///es como tenemos relacionado los datos Manejamos TYPEORM para base de datos Robustas
-  findAll() {
-    const options : FindManyOptions<Transaction> = {
-      relations: {
-        contents: true,
-      },
-    }
-    
-    return this.transactionContentsRepository.find();
-
-  }
+ findAll() {
+  const options: FindManyOptions<Transaction> = {
+    relations: {
+      contents: true,
+    },
+  };
+  return this.transactionRepository.find(options); 
+}
 
   findOne(id: number) {
     return `This action returns a #${id} transaction`;
