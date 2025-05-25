@@ -11,15 +11,20 @@ import { Product } from 'src/products/entities/product.entity';
 export class TransactionsService {
   constructor (
     @InjectRepository(Transaction) private readonly transactionRepository: Repository<Transaction>,
-    @InjectRepository(Transaction) private readonly transactionContentsRepository: Repository<Transaction>,
+    @InjectRepository(Transaction) private readonly transactionContentsRepository: Repository<TransactionContents>,
     @InjectRepository(Product) private readonly productRepository: Repository<Product>,
 
   ){}
 
-  create(createTransactionDto: CreateTransactionDto) {
-    const trasnaction = new Transaction();
-    
-    return this.transactionRepository.save(createTransactionDto);
+  async create(createTransactionDto: CreateTransactionDto) {
+    const transaction = new Transaction();
+    transaction.total = createTransactionDto.total;
+    await this.transactionRepository.save(transaction);
+    for (const contents of createTransactionDto.contents){
+      const product = this.productRepository.findOneBy({id: contents.productId})
+      await this.transactionContentsRepository.save({ ...contents, transaction });  
+    }
+    return "Venta almacenada Correctamente"
   }
 
   findAll() {
