@@ -5,12 +5,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { TransactionContents } from './entities/transaction.entity';
 import { Transaction } from './entities/transaction.entity';
 import { Repository } from 'typeorm';
+import { Product } from 'src/products/entities/product.entity';
 
 @Injectable()
 export class TransactionsService {
   constructor (
     @InjectRepository(Transaction) private readonly transactionRepository: Repository<Transaction>,
-    @InjectRepository(Transaction) private readonly transactionContentsRepository: Repository<Transaction>
+    @InjectRepository(Transaction) private readonly transactionContentsRepository: Repository<Transaction>,
+    @InjectRepository(Product) private readonly productRepository: Repository<Product>,
 
   ){}
 
