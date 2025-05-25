@@ -45,10 +45,12 @@ export class TransactionsService {
         await transactionEntityManager.save(product);
         await transactionEntityManager.save(transactionContent);
       }
-      return "Venta almacenada correctamente";
     })
+    return "Venta almacenada correctamente";
   }
 
+  ///contents , es donde se relaciona los datos es como hacer el Join en SQL
+  ///es como tenemos relacionado los datos Manejamos TYPEORM para base de datos Robustas
   findAll() {
     const options : FindManyOptions<Transaction> = {
       relations: {
