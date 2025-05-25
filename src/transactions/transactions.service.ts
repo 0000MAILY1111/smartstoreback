@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,22 +9,41 @@ import { Product } from 'src/products/entities/product.entity';
 
 @Injectable()
 export class TransactionsService {
-  constructor (
+  constructor(
     @InjectRepository(Transaction) private readonly transactionRepository: Repository<Transaction>,
-    @InjectRepository(Transaction) private readonly transactionContentsRepository: Repository<TransactionContents>,
+    @InjectRepository(TransactionContents) private readonly transactionContentsRepository: Repository<TransactionContents>,
     @InjectRepository(Product) private readonly productRepository: Repository<Product>,
-
-  ){}
+  ) {}
 
   async create(createTransactionDto: CreateTransactionDto) {
-    const transaction = new Transaction();
-    transaction.total = createTransactionDto.total;
-    await this.transactionRepository.save(transaction);
-    for (const contents of createTransactionDto.contents){
-      const product = this.productRepository.findOneBy({id: contents.productId})
-      await this.transactionContentsRepository.save({ ...contents, transaction });  
-    }
-    return "Venta almacenada Correctamente"
+    await this.productRepository.manager.transaction(async (transactionEntityManager) => {
+
+      const transaction = new Transaction();
+      transaction.total = createTransactionDto.total;
+
+      for (const contents of createTransactionDto.contents) {
+        const product = await transactionEntityManager.findOneBy( Product,{ id: contents.productId });
+
+        if (!product) {
+          throw new BadRequestException(`El producto ${contents.productId} no existe`);
+        }
+        if (contents.quantity > product.inventory) {
+          throw new BadRequestException(`El artículo ${product.name} excede la cantidad disponible`);
+        }
+        product.inventory -= contents.quantity;
+       // await transactionEntityManager.save(product);
+        const transactionContent = new TransactionContents();
+        transactionContent.quantity = contents.quantity;
+        transactionContent.transaction = transaction;
+        transactionContent.product = product;
+        transactionContent.price = contents.price;
+
+        await transactionEntityManager.save(transaction);
+        await transactionEntityManager.save(product);
+        await transactionEntityManager.save(transactionContent);
+      }
+      return "Venta almacenada correctamente";
+    })
   }
 
   findAll() {

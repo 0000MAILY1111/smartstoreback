@@ -7,9 +7,9 @@ export class Transaction {
     id: number;
     @Column('decimal')
     total: number;
-    @Column({type: 'timestamp',default: () => 'CURRENT_TIMESTAMP((6)'})
+    @Column({type: 'timestamp',default: () => 'CURRENT_TIMESTAMP(6)'})
     transactionDate: Date;
-    @OneToMany ( () => TransactionContents, (transaction) => transaction.transaction,  {cascade: true})
+    @OneToMany ( () => TransactionContents, (transaction) => transaction.transaction,  {cascade: true})  ///solo aqui manejaremos las casacadas uwu
     contents : TransactionContents[]
 }
 
