@@ -4,8 +4,10 @@ import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TransactionContents } from './entities/transaction.entity';
 import { Transaction } from './entities/transaction.entity';
-import { FindManyOptions, Repository } from 'typeorm';
+import { Between, FindManyOptions, Repository } from 'typeorm';
 import { Product } from 'src/products/entities/product.entity';
+import { endOfDay, isValid, parseISO, startOfDay } from 'date-fns';
+import e from 'express';
 
 @Injectable()
 export class TransactionsService {
@@ -51,12 +53,25 @@ export class TransactionsService {
 
   ///contents , es donde se relaciona los datos es como hacer el Join en SQL
   ///es como tenemos relacionado los datos Manejamos TYPEORM para base de datos Robustas
- findAll() {
+ findAll(transactionDate?: string) {
   const options: FindManyOptions<Transaction> = {
     relations: {
       contents: true,
     },
-  };
+  } 
+  if (transactionDate) {
+    const date = parseISO(transactionDate);
+    if (!isValid (date)){
+      throw new BadRequestException('Fecha no valida');
+    }
+    const start = startOfDay(date);
+    const end = endOfDay(date);
+    console.log(start, end);
+
+    options.where = {
+      transactionDate: Between(start, end)
+    };
+  }
   return this.transactionRepository.find(options); 
 }
 
