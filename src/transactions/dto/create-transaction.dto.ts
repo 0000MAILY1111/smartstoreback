@@ -25,4 +25,5 @@ export class CreateTransactionDto {
   @ValidateNested()
   @Type(() => TransactionContentsDto)
   contents: TransactionContentsDto[]
+  
 }
