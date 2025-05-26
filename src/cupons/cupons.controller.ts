@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
 import { CuponsService } from './cupons.service';
 import { CreateCuponDto } from './dto/create-cupon.dto';
 import { UpdateCuponDto } from './dto/update-cupon.dto';
@@ -27,8 +27,10 @@ export class CuponsController {
     return this.cuponsService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id', IdValidationPipe) id: string, @Body() updateCuponDto: UpdateCuponDto) {
+  @Put(':id')
+  update(
+    @Param('id', IdValidationPipe) id: string,  ///para leer la URL y validar el id
+   @Body() updateCuponDto: UpdateCuponDto) {    ///DTO de la actualizacion del cupon
     return this.cuponsService.update(+id, updateCuponDto);
   }
 

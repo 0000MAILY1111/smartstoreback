@@ -9,6 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 export class CuponsService {
 
   ///esto para la parte de la bd (conecta)
+  ///aqui se maneja los endpoint de las api 
   constructor(
     @InjectRepository (Cupon) private readonly cuponRepository: Repository<Cupon>,
   ) {}
@@ -18,19 +19,28 @@ export class CuponsService {
 
   findAll() {
     return this.cuponRepository.find({
-      
+
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} cupon`;
+  async findOne(id: number) {
+    const cupon = await this.cuponRepository.findOneBy({
+      id: id,})
+    if (!cupon) {
+      throw new Error(`Cupon with id ${id} not found`);
+    }
+    return cupon;
   }
 
-  update(id: number, updateCuponDto: UpdateCuponDto) {
-    return `This action updates a #${id} cupon`;
+  async update(id: number, updateCuponDto: UpdateCuponDto) {
+    const cupon = await this.findOne(id)
+    Object.assign(cupon, updateCuponDto)
+    return await this.cuponRepository.save(cupon);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} cupon`;
+  async remove(id: number) {
+    const cupon = await this.findOne(id);
+    await this.cuponRepository.remove(cupon);
+    return {message: "cupon eliminado correctamente"};
   }
 }
