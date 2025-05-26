@@ -93,14 +93,25 @@ export class TransactionsService {
     }
   */
   async remove(id: number) {
-    const transaction = await this.findOne(id)
-    for (const content of transaction.contents) {
-      const transactionContent = await this.transactionContentsRepository.findOne({
-        where: { id: content.id },
-        relations: ['product']
-      });
+    return this.transactionRepository.manager.transaction(async (manager) => {
+
+      // Find the transaction with contents
+      const transaction = await this.findOne(id);
+      // Restore inventory for each product in the transaction
+      for (const content of transaction.contents) {
+        const product = await this.productRepository.findOneBy({ id: content.product.id });
+        
+        if (!product) {
+          throw new NotFoundException(`Producto con ID ${content.product.id} no encontrado`);
+        }
+        // Increase inventory back
+        product.inventory += content.quantity;
+        await manager.save(product);
+      }
+      // Remove the transaction
+      await manager.remove(transaction);
+      return { message: "Venta eliminada correctamente" };
     }
-    await this.transactionRepository.remove(transaction);
-    return { message: "Venta eliminada correctamente" };
+    );
   }
 }
