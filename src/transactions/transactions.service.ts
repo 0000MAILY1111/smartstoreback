@@ -29,7 +29,10 @@ export class TransactionsService {
 
       if (createTransactionDto.cupon) {
         const cupon = await this.cuponsService.applyCupon(createTransactionDto.cupon);
-        console.log(cupon);
+        const discount = (cupon.percentage / 100) * total;  // Calculamos el descuento
+        transaction.discount = discount;
+        transaction.cupon = cupon.name;  // Guardamos el nombre del cupon aplicado
+        transaction.total -= discount;  // Aplicamos el descuento al total
       }
 
       for (const contents of createTransactionDto.contents) {
