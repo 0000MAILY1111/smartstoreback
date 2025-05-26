@@ -4,12 +4,15 @@ import { Column, Entity, PrimaryColumn } from "typeorm";
 export class Cupon {
     @PrimaryColumn()
     id: number;
-    @Column ({ type: 'timestamp', length: 6 })
+    @Column ({ type: 'varchar', length: 30 })
     name: string;
+    @Column ({ type: 'int' })  
     percentage: number;
+    @Column ({ type: 'date' })
     expirationDate: Date;
 
-    ///class cupon 
-    
+    ///class cupon los cupones seran usados segun el dueño y su modelo de negocio
+
+    ///nueva clase d eonbjt
 
 }
