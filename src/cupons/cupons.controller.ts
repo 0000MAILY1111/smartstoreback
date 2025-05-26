@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, HttpCode, HttpStatus } from '@nestjs/common';
 import { CuponsService } from './cupons.service';
 import { CreateCuponDto } from './dto/create-cupon.dto';
 import { UpdateCuponDto } from './dto/update-cupon.dto';
 import { IdValidationPipe } from 'src/common/pipes/id-validation/id-validation.pipe';
+import { ApplyCuponDto } from './dto/apply-cupon.dto';
 
 @Controller('cupons')
 export class CuponsController {
@@ -37,5 +38,13 @@ export class CuponsController {
   @Delete(':id')
   remove(@Param('id', IdValidationPipe) id: string) {
     return this.cuponsService.remove(+id);
+  }
+
+  ///endpoint para canjear el cupon
+  ///no olvide crear el DTO de la aplicacion del cupon cupons service
+  @Post("/apply-cupons")
+  @HttpCode(HttpStatus.OK)  
+  applyCupon(@Body() applyCuponDto: ApplyCuponDto) {
+    return this.cuponsService.applyCupon(applyCuponDto.cuponname);
   }
 }

@@ -7,6 +7,11 @@ export class Transaction {
     id: number;
     @Column('decimal')
     total: number;
+    @Column({type:'varchar', length: 30, nullable: true})
+    cupon: string;
+    @Column({type:'decimal', nullable: true , default:0})  ///esto es para que si no se aplica un cupon no de error
+    discount: number;
+
     @Column({type: 'timestamp',default: () => 'CURRENT_TIMESTAMP(6)'})
     transactionDate: Date;
     @OneToMany ( () => TransactionContents, (transaction) => transaction.transaction , {cascade: true})  ///solo aqui manejaremos las casacadas uwu
