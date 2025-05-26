@@ -15,28 +15,28 @@ export class TransactionsService {
     @InjectRepository(Transaction) private readonly transactionRepository: Repository<Transaction>,
     @InjectRepository(TransactionContents) private readonly transactionContentsRepository: Repository<TransactionContents>,
     @InjectRepository(Product) private readonly productRepository: Repository<Product>,
-  ) {}
+  ) { }
 
   async create(createTransactionDto: CreateTransactionDto) {
     await this.productRepository.manager.transaction(async (transactionEntityManager) => {
 
       const transaction = new Transaction();
-      transaction.total = createTransactionDto.contents.reduce ( (total, item)=> total + (item.quantity * item.price), 0 )
+      transaction.total = createTransactionDto.contents.reduce((total, item) => total + (item.quantity * item.price), 0)
 
       for (const contents of createTransactionDto.contents) {
-        const product = await transactionEntityManager.findOneBy( Product,{ id: contents.productId });
+        const product = await transactionEntityManager.findOneBy(Product, { id: contents.productId });
         const errorss = [] as string[];
-        
+
         if (!product) {
           errorss.push(`El producto con el ID: ${contents.productId} no existe`);
-          throw new NotFoundException (errorss)
+          throw new NotFoundException(errorss)
         }
         if (contents.quantity > product.inventory) {
           errorss.push(`El producto ${product.name} excede la cantidad de inventario`);
-          throw new BadRequestException (errorss)
+          throw new BadRequestException(errorss)
         }
         product.inventory -= contents.quantity;
-       // await transactionEntityManager.save(product);
+        // await transactionEntityManager.save(product);
         const transactionContent = new TransactionContents();
         transactionContent.quantity = contents.quantity;
         transactionContent.transaction = transaction;
@@ -53,37 +53,54 @@ export class TransactionsService {
 
   ///contents , es donde se relaciona los datos es como hacer el Join en SQL
   ///es como tenemos relacionado los datos Manejamos TYPEORM para base de datos Robustas
- findAll(transactionDate?: string) {
-  const options: FindManyOptions<Transaction> = {
-    relations: {
-      contents: true,
-    },
-  } 
-  if (transactionDate) {
-    const date = parseISO(transactionDate);
-    if (!isValid (date)){
-      throw new BadRequestException('Fecha no valida');
+  findAll(transactionDate?: string) {
+    const options: FindManyOptions<Transaction> = {
+      relations: {
+        contents: true,
+      },
     }
-    const start = startOfDay(date);
-    const end = endOfDay(date);
-    console.log(start, end);
+    if (transactionDate) {
+      const date = parseISO(transactionDate);
+      if (!isValid(date)) {
+        throw new BadRequestException('Fecha no valida');
+      }
+      const start = startOfDay(date);
+      const end = endOfDay(date);
+      console.log(start, end);
 
-    options.where = {
-      transactionDate: Between(start, end)
-    };
-  }
-  return this.transactionRepository.find(options); 
-}
-
-  findOne(id: number) {
-    return `This action returns a #${id} transaction`;
-  }
-
-  update(id: number, updateTransactionDto: UpdateTransactionDto) {
-    return `This action updates a #${id} transaction`;
+      options.where = {
+        transactionDate: Between(start, end)
+      };
+    }
+    return this.transactionRepository.find(options);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} transaction`;
+  async findOne(id: number) {
+    const transaction = await this.transactionRepository.findOne({
+      where: { id },
+      relations: {
+        contents: true,
+      },
+    });
+    if (!transaction) {
+      throw new NotFoundException("Transaccion no encontrada");
+    }
+    return transaction;
+  }
+  /*
+    update(id: number, updateTransactionDto: UpdateTransactionDto) {
+      return `This action updates a #${id} transaction`;
+    }
+  */
+  async remove(id: number) {
+    const transaction = await this.findOne(id)
+    for (const content of transaction.contents) {
+      const transactionContent = await this.transactionContentsRepository.findOne({
+        where: { id: content.id },
+        relations: ['product']
+      });
+    }
+    await this.transactionRepository.remove(transaction);
+    return { message: "Venta eliminada correctamente" };
   }
 }
