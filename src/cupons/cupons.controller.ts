@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { CuponsService } from './cupons.service';
 import { CreateCuponDto } from './dto/create-cupon.dto';
 import { UpdateCuponDto } from './dto/update-cupon.dto';
+import { IdValidationPipe } from 'src/common/pipes/id-validation/id-validation.pipe';
 
 @Controller('cupons')
 export class CuponsController {
@@ -17,18 +18,22 @@ export class CuponsController {
     return this.cuponsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
+  @Get(':id', ) ///para verificar que el id es un numero y que el cupon exista
+  async findOne(@Param('id', IdValidationPipe) id: string) {
+    const cupon = await this.cuponsService.findOne(+id);
+    if (!cupon) {
+      throw new Error(`El cupon con el ID: ${id} no fue encontrado`);
+    }
     return this.cuponsService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCuponDto: UpdateCuponDto) {
+  update(@Param('id', IdValidationPipe) id: string, @Body() updateCuponDto: UpdateCuponDto) {
     return this.cuponsService.update(+id, updateCuponDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', IdValidationPipe) id: string) {
     return this.cuponsService.remove(+id);
   }
 }

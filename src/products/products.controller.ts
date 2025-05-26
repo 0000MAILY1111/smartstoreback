@@ -26,8 +26,12 @@ export class ProductsController {
     return this.productsService.findAll(category, take, skip);
   }
 
-  @Get(':id')
+  @Get(':id')  ///para verificar que el id es un numero y que el producto exista
   findOne(@Param('id', IdValidationPipe) id: string) {
+    const product = this.productsService.findOne(+id);
+    if (!product) {
+      throw new Error(`El producto con el ID: ${id} no fue encontrado`);
+    }
     return this.productsService.findOne(+id);
   }
 

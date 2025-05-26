@@ -19,8 +19,12 @@ export class CategoriesController {
     return this.categoriesService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id', IdValidationPipe) id: string) {   ///obs 
+  @Get(':id')  ///para verificar que el id es un numero y que la categoría exista
+  findOne(@Param('id', IdValidationPipe) id: string) {   
+    const category = this.categoriesService.findOne(+id);
+    if (!category) {
+      throw new BadRequestException(`La categoría con el ID: ${id} no fue encontrada`);
+    }
     return this.categoriesService.findOne(+id);
   }
 

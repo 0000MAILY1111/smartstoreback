@@ -1,18 +1,18 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Cupon {
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn() 
     id: number;
-    @Column ({ type: 'varchar', length: 30 })
+
+    @Column({ type: 'varchar', length: 30, unique: true })
     name: string;
-    @Column ({ type: 'int' })  
+
+    @Column({ type: 'int' })
     percentage: number;
-    @Column ({ type: 'date' })
+
+    @Column({ type: 'date' })
     expirationDate: Date;
 
-    ///class cupon los cupones seran usados segun el dueño y su modelo de negocio
-
-    ///nueva clase d eonbjt
-
+    // Clase cupon: los cupones serán usados según el dueño y su modelo de negocio
 }
