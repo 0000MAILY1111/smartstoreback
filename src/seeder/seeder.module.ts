@@ -7,6 +7,8 @@ import { CategoriesModule } from '../categories/categories.module';
 import { ProductsModule } from '../products/products.module';
 import { TransactionsModule } from '../transactions/transactions.module';
 import { CuponsModule } from '../cupons/cupons.module';
+import { Product } from '../products/entities/product.entity';
+import { Category } from '../categories/entities/category.entity';
 
 @Module({
     imports: [
@@ -17,6 +19,8 @@ import { CuponsModule } from '../cupons/cupons.module';
           useFactory : typeOrmConfig ,
           inject: [ConfigService],
         }),
+        TypeOrmModule.forFeature([Product, Category]),  
+        ///seeder module deleted from the imports array as it is not used in the current context
         
         CategoriesModule,
         ProductsModule,
