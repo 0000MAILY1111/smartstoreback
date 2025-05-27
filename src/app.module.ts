@@ -8,6 +8,7 @@ import { typeOrmConfig } from './config/typeorm.config';
 import { ProductsModule } from './products/products.module';
 import { TransactionsModule } from './transactions/transactions.module';
 import { CuponsModule } from './cupons/cupons.module';
+import { SeederModule } from './seeder/seeder.module';
 
 @Module({
   imports: [
@@ -21,12 +22,11 @@ import { CuponsModule } from './cupons/cupons.module';
     }),
     
     CategoriesModule,
-    
     ProductsModule,
-    
     TransactionsModule,
+    CuponsModule,   ///seeder module deleted from the imports array as it is not used in the current context
     
-    CuponsModule],
+    ],
   controllers: [AppController],
   providers: [AppService],
 })

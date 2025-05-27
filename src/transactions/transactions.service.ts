@@ -5,10 +5,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { TransactionContents } from './entities/transaction.entity';
 import { Transaction } from './entities/transaction.entity';
 import { Between, FindManyOptions, Repository } from 'typeorm';
-import { Product } from 'src/products/entities/product.entity';
+import { Product } from '../products/entities/product.entity';
 import { endOfDay, isValid, parseISO, startOfDay } from 'date-fns';
 import e from 'express';
-import { CuponsService } from 'src/cupons/cupons.service';
+import { CuponsService } from '../cupons/cupons.service';
 
 @Injectable()
 export class TransactionsService {
