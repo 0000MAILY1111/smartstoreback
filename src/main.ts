@@ -11,7 +11,7 @@ async function bootstrap() {
   }));
   app.useStaticAssets(join(__dirname, '../public'))
   await app.listen(3000);
-
+  ///ultimo config >nextfrontend part1
 }
 bootstrap();
 
